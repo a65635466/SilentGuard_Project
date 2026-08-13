@@ -1,0 +1,26 @@
+{
+  "incident_id": "incident_demo_001",
+  "risk_chat_segments": [
+    {
+      "segment_id": "segment_001",
+      "start_message_id": "msg_001",
+      "end_message_id": "msg_002",
+      "evidence_message_ids": ["msg_001", "msg_002"],
+      "start_at": "2026-08-08T14:28:00+09:00",
+      "end_at": "2026-08-08T14:28:20+09:00",
+      "reason": "특정 사용자를 향해 대화에서 나가라고 요구하는 표현이 이어져 추가 확인이 필요합니다."
+    }
+  ],
+  "suspected_risk_types": [
+    {
+      "type": "배제성",
+      "evidence_message_ids": ["msg_001", "msg_002"]
+    }
+  ],
+  "context_reason": "대화 참여를 막는 표현이 짧은 시간 안에 이어져 배제와 압박의 위험 신호로 볼 수 있습니다.",
+  "evidence_message_ids": ["msg_001", "msg_002"],
+  "manager_summary": "14:28경 특정 사용자를 대화에서 배제하는 표현이 이어졌습니다. 원본 앞뒤 대화와 당사자 상황을 함께 확인해야 합니다.",
+  "missing_context": ["대화 이전 상황은 확인하지 못했습니다.", "실제 관계와 반복 여부는 추가 확인이 필요합니다."],
+  "recommended_initial_actions": ["원본 메시지와 앞뒤 대화를 함께 확인합니다.", "관련 메시지를 보존합니다.", "당사자 상황을 별도로 확인합니다."],
+  "disclaimer": "자동 분석된 위험 신호이며 최종 판단이 아닙니다."
+}

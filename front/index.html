@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilentGuard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main class="app-shell">
+        <header class="app-header">
+            <div>
+                <p class="eyebrow">SilentGuard Demo</p>
+                <h1>사이버 따돌림 검증 프로그램</h1>
+                <p class="app-description">채팅 입력부터 위험 신호 분석, 관리자용 사건 알림까지 한 흐름으로 확인하는 로컬 MVP입니다.</p>
+            </div>
+        </header>
+
+        <nav class="screen-tabs" aria-label="화면 전환">
+            <button type="button" id="chat-screen-btn" class="screen-tab is-active">1. 채팅방 화면</button>
+            <button type="button" id="result-screen-btn" class="screen-tab">2. 분석 결과 화면</button>
+        </nav>
+
+        <section id="chat-screen" class="screen-panel is-active">
+            <div class="screen-header">
+                <div>
+                    <p class="section-kicker">CHAT ROOM</p>
+                    <h2>대화 내용을 먼저 확인하세요</h2>
+                    <p>메시지를 직접 입력하거나 샘플 대화를 불러온 뒤 분석을 시작합니다.</p>
+                </div>
+                <div class="flow-hint"><span class="flow-dot"></span> 원본 대화 입력</div>
+            </div>
+
+            <div class="chat-layout">
+                <aside class="panel room-list-panel" aria-label="채팅방 리스트">
+                    <div class="room-list-header">
+                        <div>
+                            <p class="section-kicker">ROOMS</p>
+                            <h3>채팅방</h3>
+                        </div>
+                        <span id="room-count" class="room-count-badge">1</span>
+                    </div>
+
+                    <div class="room-create-box">
+                        <label for="new-room-name">새 채팅방 이름</label>
+                        <div class="room-create-row">
+                            <input type="text" id="new-room-name" placeholder="방 이름 입력" maxlength="30">
+                            <button type="button" id="create-room-btn" class="primary-button room-create-button">생성</button>
+                        </div>
+                    </div>
+
+                    <div id="room-list" class="room-list"></div>
+
+                    <article class="email-recipient-card room-email-card">
+                        <div>
+                            <p class="section-kicker">EMAIL NOTIFICATION</p>
+                            <h4>이메일 입력</h4>
+                        </div>
+                        <div class="field-block">
+                            <label for="room-notification-email">수신 이메일 주소</label>
+                            <div class="email-recipient-row">
+                                <input
+                                    type="text"
+                                    id="room-notification-email"
+                                    name="room-notification-email"
+                                    placeholder="manager@example.com"
+                                    inputmode="email"
+                                    autocomplete="email"
+                                >
+                                <button type="button" id="add-room-email-btn" class="primary-button email-send-button">입력</button>
+                            </div>
+                            <p id="room-email-feedback" class="email-input-feedback" aria-live="polite"></p>
+                        </div>
+                        <div id="room-email-list" class="email-address-list"></div>
+                    </article>
+                </aside>
+
+                <section class="panel chat-container-panel">
+                    <div class="chat-room-header">
+                        <div>
+                            <span class="room-label">CHAT ROOM</span>
+                            <h3 id="active-room-name">demo_room</h3>
+                            <p><span id="chat-count">0개 메시지</span> · 원본 메시지는 수정 없이 보존됩니다.</p>
+                        </div>
+                        <button type="button" id="analyze-btn" class="primary-button analyze-header-button">
+                            <span class="button-icon">↗</span> 분석 시작
+                        </button>
+                    </div>
+
+                    <div id="chat-list" class="chat-thread">
+                        <div id="empty-chat" class="empty-chat">
+                            <span class="empty-chat-icon">＋</span>
+                            <strong>아직 입력된 채팅이 없습니다.</strong>
+                            <span>아래 입력창이나 샘플 버튼으로 대화를 추가하세요.</span>
+                        </div>
+                    </div>
+
+                    <div class="chat-composer">
+                        <div class="composer-row">
+                            <div class="field-block sender-field">
+                                <label for="sender">보낸 사람</label>
+                                <input type="text" id="sender" placeholder="예: A" maxlength="20">
+                            </div>
+                            <div class="field-block message-field">
+                                <label for="message">메시지 입력</label>
+                                <div class="message-entry-row">
+                                    <textarea id="message" rows="1" placeholder="메시지를 입력하세요..."></textarea>
+                                    <button type="button" id="add-message-btn" class="primary-button icon-button" aria-label="메시지 추가">↑</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <aside class="chat-side-controls">
+                    <section class="panel side-panel bulk-input-panel">
+                        <div class="side-panel-heading">
+                            <div class="panel-icon">＋</div>
+                            <div>
+                                <h3>일괄 입력</h3>
+                                <p>여러 메시지를 한 번에 추가합니다.</p>
+                            </div>
+                        </div>
+                        <div class="field-block">
+                            <label for="bulk-message-input">대화 붙여넣기</label>
+                            <textarea id="bulk-message-input" rows="5" placeholder="A: 오늘 체육복 챙겼어?&#10;B: 응 챙겼어.&#10;A: 같이 매점 갈래?"></textarea>
+                        </div>
+                        <button type="button" id="bulk-add-btn" class="secondary-button full-button">여러 메시지 추가</button>
+                    </section>
+
+                    <section class="panel side-panel demo-sample-panel">
+                        <div class="side-panel-heading scenario-heading">
+                            <div class="panel-icon">◆</div>
+                            <div>
+                                <h3>데모 시나리오 설정</h3>
+                                <p>발표용 샘플 대화를 불러옵니다.</p>
+                            </div>
+                        </div>
+
+                        <div class="scenario-grid" aria-label="위험 단계 시나리오 선택">
+                            <button type="button" class="scenario-card scenario-normal" data-scenario="normal"><span class="scenario-dot"></span><strong>정상</strong><small>일상 대화</small></button>
+                            <button type="button" class="scenario-card scenario-caution" data-scenario="caution"><span class="scenario-dot"></span><strong>주의</strong><small>압박·긴장</small></button>
+                            <button type="button" class="scenario-card scenario-warning" data-scenario="warning"><span class="scenario-dot"></span><strong>경고</strong><small>비난·배제</small></button>
+                            <button type="button" class="scenario-card scenario-immediate" data-scenario="immediate"><span class="scenario-dot"></span><strong>즉시 개입</strong><small>심각한 위해</small></button>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+        </section>
+
+        <section id="result-screen" class="screen-panel">
+            <div class="screen-header result-screen-header">
+                <div>
+                    <p class="section-kicker">ANALYSIS RESULT</p>
+                    <h2>분석 결과 리포트</h2>
+                    <p>대화 맥락과 위험 신호 분석 결과를 원본 근거와 함께 확인합니다.</p>
+                </div>
+                <div class="result-header-actions">
+                    <div id="analysis-complete-badge" class="flow-hint result-complete"><span class="flow-dot"></span> 분석 대기</div>
+                    <button type="button" id="back-to-chat-btn" class="secondary-button">채팅방으로 돌아가기</button>
+                </div>
+            </div>
+
+            <div id="analysis-feedback" class="status-banner">채팅방 화면에서 메시지를 구성한 뒤 분석을 시작하세요.</div>
+
+            <section id="analysis-result" class="panel analysis-overview-panel">
+                <div class="result-grid result-grid-three">
+                    <div id="risk-result-card" class="result-card">
+                        <span class="result-label">괴롭힘 가능성</span>
+                        <strong id="risk-score" class="risk-score">-</strong>
+                    </div>
+                    <div id="risk-level-card" class="result-card">
+                        <span class="result-label">위험 단계</span>
+                        <strong id="risk-level" class="risk-level">분석 전</strong>
+                    </div>
+                    <div class="result-card notification-summary-card">
+                        <span class="result-label">알림 전달 상태</span>
+                        <div id="notification-status-value" class="notification-status">알림 미설정</div>
+                    </div>
+                </div>
+
+                <div id="risk-level-description" class="risk-description">분석 결과가 표시되면 위험 단계 설명이 나타납니다.</div>
+                <div class="notice"><p>※ 괴롭힘 가능성은 대화에서 발견된 위험 신호를 수치화한 값입니다. 학교폭력 여부나 특정 사용자의 역할을 확정하는 결과로 사용하지 않습니다.</p></div>
+            </section>
+
+            <div class="result-detail-grid">
+                <section id="risk-segments" class="panel result-detail-panel">
+                    <div class="section-header">
+                        <div>
+                            <p class="section-kicker">ORIGINAL EVIDENCE</p>
+                            <h3>위험 판단 채팅 구간</h3>
+                            <p>원본 메시지와 근거 ID를 수정 없이 표시합니다.</p>
+                        </div>
+                    </div>
+                    <div id="risk-segment-list"><div class="empty-result">아직 분석된 위험 구간이 없습니다.</div></div>
+
+                    <article class="email-recipient-card">
+                        <div>
+                            <p class="section-kicker">EMAIL NOTIFICATION</p>
+                            <h4>이메일 입력</h4>
+                        </div>
+                        <div class="field-block">
+                            <label for="notification-email">수신 이메일 주소</label>
+                            <div class="email-recipient-row">
+                                <input
+                                    type="email"
+                                    id="notification-email"
+                                    name="notification-email"
+                                    placeholder="manager@example.com"
+                                    autocomplete="email"
+                                >
+                                <button type="button" class="primary-button email-send-button">전송</button>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <section id="admin-alert" class="panel result-detail-panel">
+                    <div class="section-header">
+                        <div>
+                            <p class="section-kicker">AGENT NOTIFICATION</p>
+                            <h3>관리자용 사건 알림</h3>
+                            <p>Agent가 생성한 관리자용 참고 정보를 확인합니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="alert-grid">
+                        <article class="alert-card alert-card-wide"><h4>시스템 판단 근거</h4><p id="system-decision-summary">분석 전</p></article>
+                        <article class="alert-card"><h4>채팅 시간</h4><p id="chat-time-range">분석 전</p></article>
+                        <article class="alert-card"><h4>위험 유형</h4><p id="risk-type">분석 전</p></article>
+                        <article class="alert-card"><h4>위험 판단 이유와 근거 메시지</h4><p id="risk-reason">분석 전</p><div id="evidence-message-links" class="evidence-links"></div></article>
+                        <article class="alert-card"><h4>관리자용 사건 요약</h4><p id="incident-summary">분석 전</p></article>
+                        <article class="alert-card"><h4>추가 확인 필요</h4><p id="additional-context">분석 전</p></article>
+                        <article class="alert-card"><h4>권장 초기 조치</h4><p id="recommended-actions">분석 전</p></article>
+                        <article class="alert-card"><h4>알림 전달 상태</h4><p id="alert-notification-status">알림 미설정</p></article>
+                    </div>
+
+                    <div class="notice notice-stack"><p id="analysis-disclaimer">※ AI 분석은 위험 신호 탐지를 위한 참고 정보입니다. 최종 판단에는 추가 검토가 필요합니다.</p></div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

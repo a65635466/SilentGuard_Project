@@ -1,0 +1,22 @@
+{
+  "analysis_id": "analysis_demo_001",
+  "room_id": "demo_room",
+  "bullying_probability": 0.91,
+  "risk_level": "immediate",
+  "messages": [
+    {
+      "message_id": "msg_001",
+      "sender_id": "A",
+      "sender_label": "A",
+      "text": "너 왜 또 여기 들어왔냐",
+      "created_at": "2026-08-08T14:28:00+09:00"
+    },
+    {
+      "message_id": "msg_002",
+      "sender_id": "B",
+      "sender_label": "B",
+      "text": "그냥 나가라",
+      "created_at": "2026-08-08T14:28:20+09:00"
+    }
+  ]
+}

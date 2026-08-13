@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SilentGuard 로컬 Agent 테스트</title>
+  <style>
+    body { max-width: 1100px; margin: 32px auto; padding: 0 20px; font-family: sans-serif; background: #f6f7f9; color: #1f2937; }
+    h1 { margin-bottom: 8px; }
+    .muted { color: #6b7280; }
+    button { padding: 10px 16px; border: 0; border-radius: 8px; background: #2563eb; color: white; cursor: pointer; font-size: 15px; }
+    button:disabled { background: #9ca3af; cursor: wait; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+    section { background: white; border-radius: 10px; padding: 16px; box-shadow: 0 1px 4px #0001; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #111827; color: #e5e7eb; padding: 14px; border-radius: 8px; min-height: 300px; overflow: auto; }
+    #status { margin-left: 12px; }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <h1>SilentGuard Agent 로컬 테스트</h1>
+  <p class="muted">브라우저에는 API 키를 표시하지 않고, mock 요청과 Agent 응답만 보여줍니다.</p>
+  <button id="run">분석 실행</button><span id="status">대기 중</span>
+  <div class="grid">
+    <section><h2>요청 데이터</h2><pre id="request">불러오는 중...</pre></section>
+    <section><h2>응답 데이터</h2><pre id="response">아직 실행하지 않았습니다.</pre></section>
+  </div>
+  <script>
+    const requestBox = document.querySelector('#request');
+    const responseBox = document.querySelector('#response');
+    const statusBox = document.querySelector('#status');
+    const button = document.querySelector('#run');
+
+    async function loadMock() {
+      const response = await fetch('/api/mock');
+      const data = await response.json();
+      requestBox.textContent = JSON.stringify(data, null, 2);
+    }
+
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      statusBox.textContent = 'OpenAI 요청 중...';
+      responseBox.textContent = '';
+      try {
+        const payload = await (await fetch('/api/mock')).json();
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        responseBox.textContent = JSON.stringify(data, null, 2);
+        statusBox.textContent = response.ok ? '완료' : '실패';
+      } catch (error) {
+        responseBox.textContent = JSON.stringify({error: error.message}, null, 2);
+        statusBox.textContent = '실패';
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    loadMock().catch(error => {
+      requestBox.textContent = JSON.stringify({error: error.message}, null, 2);
+    });
+  </script>
+</body>
+</html>
